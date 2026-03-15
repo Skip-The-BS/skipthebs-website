@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Apps that do one thing well. No ads. No subscriptions. No BS."/>
+<title>Skip the BS — Apps that respect your time</title>
+<link rel="icon" type="image/png" href="/nobsif-icon.png">
+<link rel="apple-touch-icon" href="/nobsif-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://skipthebs.app/">
+<meta property="og:title" content="Skip the BS — Apps that respect your time">
+<meta property="og:description" content="Apps that do one thing well. No ads. No subscriptions. No BS.">
+<meta property="og:image" content="https://skipthebs.app/nobsif-icon.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Skip the BS — Apps that respect your time">
+<meta name="twitter:description" content="Apps that do one thing well. No ads. No subscriptions. No BS.">
+<meta name="twitter:image" content="https://skipthebs.app/nobsif-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0f0f0f;
+    --surface: #161616;
+    --border:  #202020;
+    --border2: #2a2a2a;
+    --text:    #f0ede8;
+    --muted:   #909090;
+    --dimmed:  #606060;
+    --faint:   #303030;
+    --accent:  #8a8a8a;   /* graphite — brand site accent */
+    --green:   #bada55;   /* moss — for highlights/easter eggs */
+    --orange:  #e8673a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.65;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  .glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    animation: glowPulse 8s ease-in-out infinite;
+  }
+  .glow-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(138,138,138,0.04), transparent 70%);
+    top: -200px; left: -200px;
+  }
+  .glow-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(138,138,138,0.03), transparent 70%);
+    bottom: 10%; right: -100px;
+    animation-delay: 4s;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: var(--dimmed);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  /* ══════════════════════════════════════════
+     STICKY NAV
+  ══════════════════════════════════════════ */
+  #nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(15,15,15,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+
+  #nav.scrolled {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+  }
+
+  .nav-mark {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-mark .acc { color: var(--green); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--dimmed);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 1px;
+    background: var(--green);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  .nav-link:hover { color: var(--text); }
+  .nav-link:hover::after { transform: scaleX(1); }
+  .nav-link.active { color: var(--text); }
+  .nav-link.active::after { transform: scaleX(1); }
+
+  /* ══════════════════════════════════════════
+     HERO
+  ══════════════════════════════════════════ */
+  #hero {
+    padding: 120px 0 96px;
+    animation: fadeIn 0.6s ease both;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.22em;
+    color: var(--dimmed);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--green);
+    opacity: 0.5;
+  }
+
+  .hero-headline {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(56px, 10vw, 112px);
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+    color: var(--text);
+    animation: fadeUp 0.5s ease 0.15s both;
+  }
+  .hero-headline .acc { color: var(--green); }
+
+  .hero-tagline {
+    margin-top: 40px;
+    font-size: clamp(17px, 2vw, 21px);
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 540px;
+    animation: fadeUp 0.5s ease 0.25s both;
+  }
+  .hero-tagline strong { color: var(--text); font-weight: 500; }
+
+  /* platforms row */
+  .platforms-row {
+    margin-top: 56px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.5s ease 0.35s both;
+  }
+
+  .platforms-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    color: var(--dimmed);
+  }
+
+  .platform-badge {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.2s;
+  }
+  .platform-badge:hover { border-color: var(--border2); }
+
+  .platform-badge-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .platform-badge-sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
+
+  /* ══════════════════════════════════════════
+     APPS
+  ══════════════════════════════════════════ */
+  #apps { padding: 96px 0; }
+
+  .app-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+  .app-card:hover { border-color: var(--border2); }
+
+  .app-card-content {
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    justify-content: space-between;
+  }
+
+  .app-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    width: fit-content;
+  }
+
+  .app-badge-live {
+    background: rgba(42,143,160,0.08);
+    border: 1px solid rgba(42,143,160,0.25);
+    color: #2a8fa0;
+  }
+
+  .app-name {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+    margin-top: 16px;
+  }
+
+  .app-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--dimmed);
+    letter-spacing: 0.15em;
+    margin-top: 6px;
+  }
+
+  .app-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .app-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-ocean { background: #2a8fa0; color: #080f11; }
+  .btn-ocean:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--dimmed);
+    border: 1px solid var(--border2);
+    cursor: default;
+  }
+  .btn-ghost:hover { opacity: 1; transform: none; }
+
+  .app-card-visual {
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    position: relative;
+    min-height: 280px;
+  }
+  .app-card-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(42,143,160,0.04), transparent 70%);
+  }
+
+  .app-icon-svg {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s, filter 0.3s;
+    filter: drop-shadow(0 8px 24px rgba(42,143,160,0.15));
+  }
+  .app-card:hover .app-icon-svg {
+    transform: translateY(-4px);
+    filter: drop-shadow(0 12px 36px rgba(42,143,160,0.28));
+  }
+
+  /* more card */
+  .more-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 36px 40px;
+    border: 1px dashed var(--border);
+    border-radius: 20px;
+    transition: border-color 0.3s;
+  }
+  .more-card:hover { border-color: var(--border2); }
+
+  .more-card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--dimmed);
+    margin-bottom: 10px;
+  }
+
+  .more-card-body {
+    font-size: 17px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+  .more-card-body strong { color: var(--text); font-weight: 500; }
+
+  .more-dots { display: flex; gap: 8px; flex-shrink: 0; }
+  .more-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border2); }
+
+  /* ══════════════════════════════════════════
+     MANIFESTO
+  ══════════════════════════════════════════ */
+  #manifesto { padding: 96px 0; }
+
+  .manifesto-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .manifesto-item:first-of-type { border-top: 1px solid var(--border); }
+
+  .manifesto-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    padding-top: 5px;
+  }
+
+  .manifesto-text {
+    font-size: clamp(16px, 2vw, 19px);
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .manifesto-text strong { color: var(--text); font-weight: 500; }
+  .manifesto-text .no { color: var(--orange); text-decoration: line-through; opacity: 0.75; }
+
+  /* ══════════════════════════════════════════
+     SUPPORT
+  ══════════════════════════════════════════ */
+  #support { padding: 96px 0; }
+
+  .support-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .support-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: border-color 0.2s;
+  }
+  .support-card:hover { border-color: var(--border2); }
+
+  .support-card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--dimmed);
+    margin-bottom: 12px;
+  }
+
+  .support-card-title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .support-card-body {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  .support-card-body a {
+    color: var(--green);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(186,218,85,0.3);
+    transition: border-color 0.2s;
+  }
+  .support-card-body a:hover { border-color: var(--green); }
+
+  .support-email-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    grid-column: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    transition: border-color 0.2s;
+  }
+  .support-email-card:hover { border-color: var(--border2); }
+
+  .support-email {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-weight: 700;
+    color: var(--green);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    transition: opacity 0.2s;
+  }
+  .support-email:hover { opacity: 0.8; }
+
+  .support-email-note {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 360px;
+    line-height: 1.6;
+    text-align: right;
+    font-weight: 300;
+  }
+
+  /* ══════════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════════ */
+  footer {
+    padding: 40px 0 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-mark {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .footer-mark .acc { color: var(--green); }
+
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+
+  .footer-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--dimmed);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--text); }
+
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--faint);
+  }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 720px) {
+    body { font-size: 16px; }
+    .container { padding: 0 20px; }
+    .nav-links { gap: 20px; }
+    .nav-link { font-size: 13px; }
+    #hero { padding: 80px 0 64px; }
+    .app-card { grid-template-columns: 1fr; }
+    .app-card-visual { border-left: none; border-top: 1px solid var(--border); min-height: 220px; }
+    .app-card-content { padding: 32px 24px; }
+    .support-grid { grid-template-columns: 1fr; }
+    .support-email-card { grid-column: span 1; flex-direction: column; align-items: flex-start; }
+    .support-email-note { text-align: left; }
+    .more-card { flex-direction: column; align-items: flex-start; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+    .manifesto-item { grid-template-columns: 40px 1fr; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+
+<!-- ══ STICKY NAV ══ -->
+<div id="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-mark">SKIP THE <span class="acc">BS</span></a>
+      <div class="nav-links">
+        <a href="#apps" class="nav-link">APPS</a>
+        <a href="#manifesto" class="nav-link">MANIFESTO</a>
+        <a href="#support" class="nav-link">SUPPORT</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══ HERO ══ -->
+  <section id="hero">
+    <div class="hero-eyebrow">INDEPENDENT SOFTWARE</div>
+    <h1 class="hero-headline">SKIP<br>THE <span class="acc">BS</span></h1>
+    <p class="hero-tagline">
+      <strong>No ads. No subscriptions. No BS.</strong><br>
+      Apps that do one thing well and get out of the way.
+      Core functionality free forever. One-time purchase for extras.
+      That's the whole deal.
+    </p>
+    <div class="platforms-row">
+      <div class="platforms-label">AVAILABLE ON</div>
+      <div class="platform-badge">
+        <svg width="26" height="32" viewBox="0 0 814 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663 0 541.8c0-207.1 135.4-316.6 268.9-316.6 71 0 130.1 46.4 174.4 46.4 42.7 0 109.2-49.9 189.2-49.9 30.5 0 110.5 2.6 162.5 63.9zm-234.1-181.4c31.5-37.4 53.9-89.5 53.9-141.5 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 84.5-55.1 137.2 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 134.7-70.8z" fill="var(--text)"/>
+        </svg>
+        <div>
+          <div class="platform-badge-name">App Store</div>
+          <div class="platform-badge-sub">iOS &amp; iPadOS</div>
+        </div>
+      </div>
+      <div class="platform-badge">
+        <svg width="26" height="30" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 1.5C2 0.5 3.1 0 3.9 0.5L22.5 12.5C23.3 13 23.3 14 22.5 14.5L3.9 26.5C3.1 27 2 26.5 2 25.5V1.5Z" fill="var(--text)"/>
+        </svg>
+        <div>
+          <div class="platform-badge-name">Google Play</div>
+          <div class="platform-badge-sub">Android</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══ APPS ══ -->
+  <section id="apps">
+    <div class="section-label reveal">OUR APPS</div>
+
+    <!-- NO BS IF -->
+    <div class="app-card reveal">
+      <div class="app-card-content">
+        <div>
+          <div class="app-badge app-badge-live">&#9679; AVAILABLE NOW</div>
+          <div class="app-name">NO <span style="color:#2a8fa0;">BS</span> <span style="color:var(--border2);">IF</span></div>
+          <div class="app-sub">INTERMITTENT FASTING</div>
+        </div>
+        <p class="app-desc">"Start a fast fast. Fix the time if you forgot. Keep the rest out of the way."</p>
+        <div class="app-actions">
+          <a href="https://nobsif.app" class="btn btn-ocean">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L11 6L6 11M1 6H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            VIEW APP
+          </a>
+          <span class="btn btn-ghost">APP STORE &#8212; COMING SOON</span>
+        </div>
+      </div>
+      <div class="app-card-visual">
+        <svg class="app-icon-svg" width="116" height="116" viewBox="0 0 120 120" fill="none">
+          <rect width="120" height="120" rx="28" fill="#2a8fa0"/>
+          <text x="11" y="52" font-family="'Space Mono',monospace" font-weight="700" font-size="33" fill="#080f11">NO</text>
+          <text x="11" y="86" font-family="'Space Mono',monospace" font-weight="700" font-size="33" fill="#080f11">BS</text>
+          <text x="78" y="86" font-family="'Space Mono',monospace" font-weight="700" font-size="22" fill="#080f11" opacity="0.4">IF</text>
+          <line x1="90" y1="30" x2="90" y2="50" stroke="#080f11" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+          <line x1="90" y1="50" x2="106" y2="50" stroke="#080f11" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- More coming -->
+    <div class="more-card reveal">
+      <div>
+        <div class="more-card-label">WHAT'S NEXT</div>
+        <div class="more-card-body">
+          More apps are in the works. Each one will follow the same principle &#8212;
+          <strong>one job, done well, no nonsense.</strong>
+          We don't need a roadmap to prove it.
+        </div>
+      </div>
+      <div class="more-dots">
+        <div class="more-dot"></div>
+        <div class="more-dot"></div>
+        <div class="more-dot"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══ MANIFESTO ══ -->
+  <section id="manifesto">
+    <div class="section-label reveal">THE MANIFESTO</div>
+
+    <div class="manifesto-item reveal">
+      <span class="manifesto-num">01</span>
+      <span class="manifesto-text">Apps should <strong>do the thing</strong> &#8212; not sell you coaching, community, or a personality.</span>
+    </div>
+    <div class="manifesto-item reveal">
+      <span class="manifesto-num">02</span>
+      <span class="manifesto-text">Your data is yours. <span class="no">Ours.</span> Not our product. Not our leverage. Stays on your phone.</span>
+    </div>
+    <div class="manifesto-item reveal">
+      <span class="manifesto-num">03</span>
+      <span class="manifesto-text">Free forever means <strong>free forever</strong>. Core functionality is not a trial. There is no expiry date.</span>
+    </div>
+    <div class="manifesto-item reveal">
+      <span class="manifesto-num">04</span>
+      <span class="manifesto-text">One-time purchase means <strong>once</strong>. You bought it. You own it. We will not invent a subscription tier next year.</span>
+    </div>
+    <div class="manifesto-item reveal">
+      <span class="manifesto-num">05</span>
+      <span class="manifesto-text">No dark patterns. No &#8220;are you sure?&#8221; when you cancel. No confetti when you pay. No guilt when you don&#8217;t.</span>
+    </div>
+    <div class="manifesto-item reveal">
+      <span class="manifesto-num">06</span>
+      <span class="manifesto-text">Notifications ask permission and deliver facts. <span class="no">&#8220;14 hours in &#8212; keep going champ! &#127942;&#8221;</span> No. Just the time.</span>
+    </div>
+    <div class="manifesto-item reveal">
+      <span class="manifesto-num">07</span>
+      <span class="manifesto-text">Good software is craft. We ship when it&#8217;s ready. We don&#8217;t ship features to justify a subscription.</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══ SUPPORT ══ -->
+  <section id="support">
+    <div class="section-label reveal">SUPPORT</div>
+
+    <div class="support-grid reveal">
+      <div class="support-card">
+        <div class="support-card-label">BEFORE YOU WRITE</div>
+        <div class="support-card-title">Check the app first</div>
+        <div class="support-card-body">Most questions are answered inside the app. Settings, the FAQ section, and the in-app help cover the common stuff. If you&#8217;re stuck after that, we&#8217;re here.</div>
+      </div>
+      <div class="support-card">
+        <div class="support-card-label">RESPONSE TIME</div>
+        <div class="support-card-title">Real people, real answers</div>
+        <div class="support-card-body">No ticket system, no bots, no scripted replies. A real person reads every message and responds. We aim to get back to you within 48 hours. Read our <a href="/privacy">privacy policy</a>.</div>
+      </div>
+      <div class="support-email-card">
+        <a href="mailto:hello@skipthebs.app" class="support-email">hello@skipthebs.app</a>
+        <div class="support-email-note">Bug reports, feedback, or anything else. A real person reads every email.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══ FOOTER ══ -->
+<div class="container">
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-mark">SKIP THE <span class="acc">BS</span></div>
+      <div class="footer-links">
+        <a href="/privacy" class="footer-link">PRIVACY POLICY</a>
+      </div>
+      <div class="footer-copy">&#169; 2026 &#8212; made with craft and mild indignation</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Sticky nav shadow on scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Active nav link on scroll
+  const sections = ['hero', 'apps', 'manifesto', 'support'];
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) sectionObserver.observe(el);
+  });
+
+  // Scroll reveal
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Console easter egg
+  console.log('%c SKIP THE BS ', 'background:#bada55;color:#0f0f0f;font-family:monospace;font-weight:bold;font-size:14px;padding:4px 8px;');
+  console.log('%c Yes, #bada55 is a real hex code. It ships intentionally. ', 'color:#bada55;font-family:monospace;font-size:11px;');
+  console.log('%c hello@skipthebs.app ', 'color:#606060;font-family:monospace;font-size:11px;');
+</script>
+
+</body>
+</html>
