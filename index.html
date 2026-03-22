@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Apps that do one thing well. No ads. No subscriptions. No BS."/>
 <title>Skip the BS — Apps that respect your time</title>
-<link rel="icon" type="image/png" href="/nobsif-icon.png">
-<link rel="apple-touch-icon" href="/nobsif-icon.png">
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="apple-touch-icon" href="/icon.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://skipthebs.app/">
 <meta property="og:title" content="Skip the BS — Apps that respect your time">
 <meta property="og:description" content="Apps that do one thing well. No ads. No subscriptions. No BS.">
-<meta property="og:image" content="https://skipthebs.app/nobsif-icon.png">
+<meta property="og:image" content="https://skipthebs.app/icon.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Skip the BS — Apps that respect your time">
 <meta name="twitter:description" content="Apps that do one thing well. No ads. No subscriptions. No BS.">
-<meta name="twitter:image" content="https://skipthebs.app/nobsif-icon.png">
+<meta name="twitter:image" content="https://skipthebs.app/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
@@ -392,13 +392,16 @@
     background: radial-gradient(circle at 50% 50%, rgba(42,143,160,0.04), transparent 70%);
   }
 
-  .app-icon-svg {
+  .app-icon-img {
     position: relative;
     z-index: 1;
+    width: 116px;
+    height: 116px;
+    border-radius: 22%;
     transition: transform 0.3s, filter 0.3s;
     filter: drop-shadow(0 8px 24px rgba(42,143,160,0.15));
   }
-  .app-card:hover .app-icon-svg {
+  .app-card:hover .app-icon-img {
     transform: translateY(-4px);
     filter: drop-shadow(0 12px 36px rgba(42,143,160,0.28));
   }
@@ -695,14 +698,7 @@
         </div>
       </div>
       <div class="app-card-visual">
-        <svg class="app-icon-svg" width="116" height="116" viewBox="0 0 120 120" fill="none">
-          <rect width="120" height="120" rx="28" fill="#2a8fa0"/>
-          <text x="11" y="52" font-family="'Space Mono',monospace" font-weight="700" font-size="33" fill="#080f11">NO</text>
-          <text x="11" y="86" font-family="'Space Mono',monospace" font-weight="700" font-size="33" fill="#080f11">BS</text>
-          <text x="78" y="86" font-family="'Space Mono',monospace" font-weight="700" font-size="22" fill="#080f11" opacity="0.4">IF</text>
-          <line x1="90" y1="30" x2="90" y2="50" stroke="#080f11" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
-          <line x1="90" y1="50" x2="106" y2="50" stroke="#080f11" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
-        </svg>
+        <img class="app-icon-img" src="/icon.png" alt="NO BS IF app icon" width="116" height="116">
       </div>
     </div>
 
