@@ -19,54 +19,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg:      #0f0f0f;
-    --surface: #161616;
-    --border:  #202020;
-    --border2: #2a2a2a;
-    --text:    #f0ede8;
-    --muted:   #909090;
-    --dimmed:  #606060;
-    --faint:   #303030;
-    --green:   #bada55;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    font-size: 18px;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 100;
-  }
-
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 32px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border2), transparent);
-  }
+  body { line-height: 1.7; }
+  .container { max-width: 720px; }
 
   /* ── Nav ── */
   nav {
@@ -77,16 +33,6 @@
     border-bottom: 1px solid var(--border);
     margin-bottom: 0;
   }
-
-  .nav-mark {
-    font-family: 'Space Mono', monospace;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .nav-mark .acc { color: var(--green); }
 
   .nav-back {
     font-family: 'Space Mono', monospace;
@@ -277,35 +223,7 @@
   }
 
   /* ── Footer ── */
-  footer {
-    padding: 40px 0 32px;
-    border-top: 1px solid var(--border);
-    margin-top: 32px;
-  }
-
-  .footer-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .footer-mark {
-    font-family: 'Space Mono', monospace;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    text-decoration: none;
-  }
-  .footer-mark .acc { color: var(--green); }
-
-  .footer-copy {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--faint);
-  }
+  footer { margin-top: 32px; }
 
   @media (max-width: 600px) {
     .container { padding: 0 20px; }
